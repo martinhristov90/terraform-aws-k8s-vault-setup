@@ -33,7 +33,7 @@ resource "vault_aws_auth_backend_role" "aws_iam_type_auth" {
   backend              = vault_auth_backend.aws.path
   role                 = "${var.ROLE_NAME}"
   auth_type            = "iam"
-  bound_iam_role_arns  = ["${var.ALLOWED_ROLE_ARN_LOGIN}"]
+  bound_iam_role_arns  = ["${var.ALLOWED_ARN_ROLE_LOGIN}"]
   inferred_entity_type = "ec2_instance"
   inferred_aws_region  = "${var.INFERRED_AWS_REGION}"
   token_ttl            = 60
