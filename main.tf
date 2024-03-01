@@ -11,3 +11,59 @@ resource "vault_auth_backend" "aws" {
 # Enable AWS secrets engine, needed permissions to AWS API are provided via EC2 instance profile
 resource "vault_aws_secret_backend" "aws" {
 }
+
+# AWS auth method roles start here
+
+# AWS auth EC2 type using PKCS7 document provided by the metadata to log in
+# Only EC2 instances from local VPC can log in via this role.
+resource "vault_aws_auth_backend_role" "aws_ec2_type_auth" {
+  backend              = vault_auth_backend.aws.path
+  role                 = "${var.role_name}_ec2_type"
+  auth_type            = "ec2"
+  bound_vpc_ids        = ["${var.bound_vpc_ids}"]
+  inferred_entity_type = "ec2_instance"
+  token_ttl            = 60
+  token_max_ttl        = 120
+  token_policies       = ["default"]
+}
+
+
+# role name matches the role of the instance profile of the EC2 instance. No "role=" parameter should be provided via "vault login -method=aws" command.
+resource "vault_aws_auth_backend_role" "aws_iam_type_auth" {
+  backend              = vault_auth_backend.aws.path
+  role                 = "${var.role_name}"
+  auth_type            = "iam"
+  bound_iam_role_arns  = ["${var.allowed_role_arn_login}"]
+  inferred_entity_type = "ec2_instance"
+  inferred_aws_region  = "${var.inferred_aws_region}"
+  token_ttl            = 60
+  token_max_ttl        = 120
+  token_policies       = ["default"]
+}
+
+# Configuration for AWS secrets engine starts here
+resource "vault_aws_secret_backend_role" "role" {
+  backend                  = vault_aws_secret_backend.aws.path
+  name                     = "demo_aws_secrets_role"
+  credential_type          = "iam_user"
+  permissions_boundary_arn = "${var.demouser_arn}"
+  policy_document          = <<EOT
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "ec2:*",
+      "Resource": "*"
+    }
+  ]
+}
+EOT
+}
+
+resource "vault_aws_secret_backend_role" "role_assume" {
+  backend         = vault_aws_secret_backend.aws.path
+  name            = "${var.role_name}_assumed_role"
+  credential_type = "assumed_role"
+  role_arns       = ["${var.demorole_arn}"]
+}
