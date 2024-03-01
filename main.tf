@@ -46,7 +46,7 @@ resource "vault_aws_secret_backend_role" "role" {
   backend                  = vault_aws_secret_backend.aws.path
   name                     = "demo_aws_secrets_role"
   credential_type          = "iam_user"
-  permissions_boundary_arn = "${var.demouser_arn}"
+  permissions_boundary_arn = "${var.DEMOUSER_ARN}"
   policy_document          = <<EOT
 {
   "Version": "2012-10-17",
