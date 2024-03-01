@@ -64,7 +64,7 @@ EOT
 resource "vault_aws_secret_backend_role" "role_assume" {
   backend         = vault_aws_secret_backend.aws.path
   name            = "${var.ROLE_NAME}_assumed_role"
-  default_sts_ttl = 600
+  default_sts_ttl = 900
   credential_type = "assumed_role"
   role_arns       = ["${var.DEMOROLE_ARN}"]
 }
