@@ -1,19 +1,19 @@
-variable "demorole_arn" {
+variable "DEMOROLE_ARN" {
     description="provides ARN for the demouser"
 }
 
-variable "role_name" {
+variable "ROLE_NAME" {
     description="role name used in creation AWS auth and AWS secrets engine roles"
 }
 
-variable "allowed_role_arn_login" {
+variable "ALLOWED_ARN_ROLE_LOGIN" {
     description="ARN of the role that is allowed to login to AWS auth method"
 }
 
-variable "inferred_aws_region"{
+variable "INFERRED_AWS_REGION"{
     description="region when inffering EC2 auth via IAM role"
 }
 
-variable "bound_vpc_ids" {
+variable "BOUND_VPC_IDS" {
     description="ID of VPC that is allowed to login to AWS auth method"
 }
