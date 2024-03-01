@@ -46,7 +46,7 @@ resource "vault_aws_secret_backend_role" "role" {
   backend                  = vault_aws_secret_backend.aws.path
   name                     = "demo_aws_secrets_role"
   credential_type          = "iam_user"
-  permissions_boundary_arn = "${var.DEMOUSER_ARN}"
+  permissions_boundary_arn = "${var.DEMOROLE_ARN}"
   policy_document          = <<EOT
 {
   "Version": "2012-10-17",
@@ -64,6 +64,7 @@ EOT
 resource "vault_aws_secret_backend_role" "role_assume" {
   backend         = vault_aws_secret_backend.aws.path
   name            = "${var.ROLE_NAME}_assumed_role"
+  default_sts_ttl = "10m"
   credential_type = "assumed_role"
   role_arns       = ["${var.DEMOROLE_ARN}"]
 }
