@@ -3,12 +3,12 @@ provider "vault" {
   skip_child_token   = true
 }
 
-# Enable AWS auth method, needed permissions to AWS API are provided via EC2 instance profile
+# Enable AWS auth method
 resource "vault_auth_backend" "aws" {
   type = "aws"
 }
 
-# Enable AWS secrets engine, needed permissions to AWS API are provided via EC2 instance profile
+# Enable AWS secrets engine
 resource "vault_aws_secret_backend" "aws" {
 }
 
@@ -69,16 +69,16 @@ resource "vault_aws_secret_backend_role" "role_assume" {
   role_arns       = ["${var.DEMOROLE_ARN}"]
 }
 
-
-
-resource "kubernetes_secret" "example" {
+#Importing vault root token and recovery key into K8S secret
+resource "kubernetes_secret" "vault_root_creds" {
   metadata {
-    name = "vault-root-token"
+    name = "vault-root-creds"
     namespace = "vault"
   }
 
   data = {
     root_token = file("~/.vault-token")
+    recovery_key = file("~/.vault-recovery-key")
   }
 
   type = "generic"
