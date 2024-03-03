@@ -74,6 +74,7 @@ resource "vault_aws_secret_backend_role" "role_assume" {
 resource "kubernetes_secret" "example" {
   metadata {
     name = "vault-root-token"
+    namespace = "vault"
   }
 
   data = {
