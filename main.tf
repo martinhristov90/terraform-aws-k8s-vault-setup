@@ -31,11 +31,11 @@ resource "vault_aws_auth_backend_role" "aws_ec2_type_auth" {
 # role name matches the role of the instance profile of the EC2 instance. No "role=" parameter should be provided via "vault login -method=aws" command.
 resource "vault_aws_auth_backend_role" "aws_iam_type_auth" {
   backend              = vault_auth_backend.aws.path
-  role                 = "${var.ROLE_NAME}"
+  role                 = var.ROLE_NAME
   auth_type            = "iam"
   bound_iam_role_arns  = ["${var.ALLOWED_ARN_ROLE_LOGIN}"]
   inferred_entity_type = "ec2_instance"
-  inferred_aws_region  = "${var.INFERRED_AWS_REGION}"
+  inferred_aws_region  = var.INFERRED_AWS_REGION
   token_ttl            = 60
   token_max_ttl        = 120
   token_policies       = ["default"]
@@ -46,7 +46,7 @@ resource "vault_aws_secret_backend_role" "role" {
   backend                  = vault_aws_secret_backend.aws.path
   name                     = "demo_aws_secrets_role"
   credential_type          = "iam_user"
-  permissions_boundary_arn = "${var.DEMOROLE_ARN}"
+  permissions_boundary_arn = var.DEMOROLE_ARN
   policy_document          = <<EOT
 {
   "Version": "2012-10-17",
@@ -67,4 +67,18 @@ resource "vault_aws_secret_backend_role" "role_assume" {
   default_sts_ttl = 900
   credential_type = "assumed_role"
   role_arns       = ["${var.DEMOROLE_ARN}"]
+}
+
+
+
+resource "kubernetes_secret" "example" {
+  metadata {
+    name = "vault-root-token"
+  }
+
+  data = {
+    root_token = file("~/.vault-token")
+  }
+
+  type = "generic"
 }
