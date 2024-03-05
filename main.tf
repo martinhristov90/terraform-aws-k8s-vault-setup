@@ -29,15 +29,15 @@ resource "vault_aws_auth_backend_role" "aws_ec2_type_auth" {
 
 
 # role name matches the role of the instance profile of the EC2 instance. No "role=" parameter should be provided via "vault login -method=aws" command.
-resource "vault_aws_auth_backend_role" "aws_iam_type_auth" {
-  backend              = vault_auth_backend.aws.path
-  role                 = var.ROLE_NAME
-  auth_type            = "iam"
-  bound_iam_role_arns  = ["${var.ALLOWED_ARN_ROLE_LOGIN}"]
-  token_ttl            = 60
-  token_max_ttl        = 120
-  token_policies       = ["default"]
-}
+#resource "vault_aws_auth_backend_role" "aws_iam_type_auth" {
+#  backend              = vault_auth_backend.aws.path
+#  role                 = var.ROLE_NAME
+#  auth_type            = "iam"
+#  bound_iam_role_arns  = ["${var.ALLOWED_ARN_ROLE_LOGIN}"]
+#  token_ttl            = 60
+#  token_max_ttl        = 120
+#  token_policies       = ["default"]
+#}
 
 # Configuration for AWS secrets engine starts here
 resource "vault_aws_secret_backend_role" "role" {
