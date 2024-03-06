@@ -1,5 +1,9 @@
-variable "DEMOROLE_ARN" {
-  description = "provides ARN for the demouser"
+variable "DEMOROLE_POLICY_ARN" {
+  description = "provides ARN for policy used as PermissionBoundary for the demouser"
+}
+
+variable "DEMOROLE_ROLE_ARN" {
+  description = "provide ARN for the role demouser"
 }
 
 variable "ROLE_NAME" {

@@ -44,7 +44,7 @@ resource "vault_aws_secret_backend_role" "role" {
   backend                  = vault_aws_secret_backend.aws.path
   name                     = "demo_aws_secrets_role"
   credential_type          = "iam_user"
-  permissions_boundary_arn = var.DEMOROLE_ARN
+  permissions_boundary_arn = var.DEMOROLE_POLICY_ARN
   policy_document          = <<EOT
 {
   "Version": "2012-10-17",
@@ -64,32 +64,32 @@ resource "vault_aws_secret_backend_role" "role_assume" {
   name            = "${var.ROLE_NAME}_assumed_role"
   default_sts_ttl = 900
   credential_type = "assumed_role"
-  role_arns       = ["arn:aws:iam::123361688033:role/vault-assumed-role-credentials-demo"]
+  role_arns       = ["${DEMOROLE_ROLE_ARN}"]
 }
 
 #Importing vault root token and recovery key into K8S secret
 resource "kubernetes_secret" "vault_root_creds" {
   metadata {
-    name = "vault-root-creds"
+    name      = "vault-root-creds"
     namespace = "vault"
   }
 
   data = {
-    root_token = file("~/.vault-token")
+    root_token   = file("~/.vault-token")
     recovery_key = file("~/.vault-recovery-key")
   }
 
-  type = "generic"
+  type                           = "generic"
   wait_for_service_account_token = false
 }
 
 #Creating a role for demo-sa pod in AWS auth
 resource "vault_aws_auth_backend_role" "demo_sa_role" {
-  backend              = vault_auth_backend.aws.path
-  role                 = "demo-sa"
-  auth_type            = "iam"
-  bound_iam_principal_arns  = ["arn:aws:iam::123361688033:role/demo-sa"]
-  token_ttl            = 60
-  token_max_ttl        = 120
-  token_policies       = ["default"]
+  backend                  = vault_auth_backend.aws.path
+  role                     = "demo-sa"
+  auth_type                = "iam"
+  bound_iam_principal_arns = ["arn:aws:iam::123361688033:role/demo-sa"]
+  token_ttl                = 60
+  token_max_ttl            = 120
+  token_policies           = ["default"]
 }
