@@ -64,7 +64,7 @@ resource "vault_aws_secret_backend_role" "role_assume" {
   name            = "${var.ROLE_NAME}_assumed_role"
   default_sts_ttl = 900
   credential_type = "assumed_role"
-  role_arns       = ["${DEMOROLE_ROLE_ARN}"]
+  role_arns       = ["${var.DEMOROLE_ROLE_ARN}"]
 }
 
 #Importing vault root token and recovery key into K8S secret
