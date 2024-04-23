@@ -99,7 +99,7 @@ resource "vault_policy" "aws_secrets" {
   name = "aws-secrets"
 
   policy = <<EOT
-path "aws/creds" {
+path "aws/creds/*" {
   capabilities = ["update","create","read"]
 }
 EOT
