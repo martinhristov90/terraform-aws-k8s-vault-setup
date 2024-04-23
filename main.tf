@@ -86,7 +86,7 @@ resource "kubernetes_secret" "vault_root_creds" {
 #Creating a role for demo-sa pod in AWS auth
 resource "vault_aws_auth_backend_role" "demo_sa_role" {
   backend                  = vault_auth_backend.aws.path
-  role                     = "demo-sa"
+  role                     = var.ROLE_NAME
   auth_type                = "iam"
   bound_iam_principal_arns = [var.ALLOWED_ARN_ROLE_LOGIN] #["arn:aws:iam::123361688033:role/demo-sa"]
   token_ttl                = 60
