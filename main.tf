@@ -51,7 +51,7 @@ resource "vault_aws_secret_backend_role" "role" {
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": "ec2:*",
+      "Action": "ec2:DescribeInstances",
       "Resource": "*"
     }
   ]
@@ -61,7 +61,7 @@ EOT
 
 resource "vault_aws_secret_backend_role" "role_assume" {
   backend         = vault_aws_secret_backend.aws.path
-  name            = "${var.ROLE_NAME}_assumed_role"
+  name            = "demo_aws_secrets_role_assumed_role"
   default_sts_ttl = 900
   credential_type = "assumed_role"
   role_arns       = ["${var.DEMOROLE_ROLE_ARN}"]
@@ -88,8 +88,19 @@ resource "vault_aws_auth_backend_role" "demo_sa_role" {
   backend                  = vault_auth_backend.aws.path
   role                     = var.ROLE_NAME
   auth_type                = "iam"
-  bound_iam_principal_arns = [var.ALLOWED_ARN_ROLE_LOGIN] #["arn:aws:iam::123361688033:role/demo-sa"]
+  bound_iam_principal_arns = [var.ALLOWED_ARN_ROLE_LOGIN] # Example: arn:aws:iam::123361688033:role/consume-pod-role-bright-halibut
   token_ttl                = 60
   token_max_ttl            = 120
-  token_policies           = ["default"]
+  token_policies           = [vault_policy.aws_secrets.name]
+}
+
+# Policy allowing access to AWS secrets engine for the demo_sa_role role
+resource "vault_policy" "aws_secrets" {
+  name = "aws-secrets"
+
+  policy = <<EOT
+path "aws/creds" {
+  capabilities = ["update","create","read"]
+}
+EOT
 }
