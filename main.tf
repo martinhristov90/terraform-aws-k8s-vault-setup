@@ -89,8 +89,8 @@ resource "vault_aws_auth_backend_role" "demo_sa_role" {
   role                     = var.ROLE_NAME
   auth_type                = "iam"
   bound_iam_principal_arns = [var.ALLOWED_ARN_ROLE_LOGIN] # Example: arn:aws:iam::123361688033:role/consume-pod-role-bright-halibut
-  token_ttl                = 60
-  token_max_ttl            = 120
+  token_ttl                = 100
+  token_max_ttl            = 300
   token_policies           = [vault_policy.aws_secrets.name]
 }
 
