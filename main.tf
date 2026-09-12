@@ -1,5 +1,5 @@
 provider "vault" {
-  add_address_to_env = true
+  #add_address_to_env = true
   skip_child_token   = true
   address = "https://127.0.0.1:8200"
   skip_tls_verify = true
