@@ -1,8 +1,8 @@
 provider "vault" {
   #add_address_to_env = true
-  skip_child_token   = true
-  address = "https://127.0.0.1:8200"
-  skip_tls_verify = true
+  skip_child_token = true
+  address          = "https://127.0.0.1:8200"
+  skip_tls_verify  = true
 }
 
 # Enable AWS auth method
@@ -22,7 +22,7 @@ resource "vault_aws_auth_backend_role" "aws_ec2_type_auth" {
   backend              = vault_auth_backend.aws.path
   role                 = "${var.ROLE_NAME}_ec2_type"
   auth_type            = "ec2"
-  bound_vpc_ids        = ["${var.BOUND_VPC_IDS}"]
+  bound_vpc_ids        = [var.BOUND_VPC_IDS]
   inferred_entity_type = "ec2_instance"
   token_ttl            = 60
   token_max_ttl        = 120
@@ -66,7 +66,7 @@ resource "vault_aws_secret_backend_role" "role_assume" {
   name            = "demo_aws_secrets_role_assumed_role"
   default_sts_ttl = 900
   credential_type = "assumed_role"
-  role_arns       = ["${var.DEMOROLE_ROLE_ARN}"]
+  role_arns       = [var.DEMOROLE_ROLE_ARN]
 }
 
 #Importing vault root token and recovery key into K8S secret
@@ -101,7 +101,7 @@ resource "vault_policy" "aws_secrets" {
   name = "aws-secrets"
 
   policy = <<EOT
-path "aws/creds/*" {
+path "${vault_aws_secret_backend.aws.path}/creds/*" {
   capabilities = ["update","create","read"]
 }
 EOT

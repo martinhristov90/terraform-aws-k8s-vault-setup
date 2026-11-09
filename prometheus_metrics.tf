@@ -2,9 +2,9 @@
 
 #Creating a policy to read metrics endpoint
 resource "vault_policy" "prometheus_metrics_policy" {
-  name = "prometheus_metrics_policy"
+  name   = "prometheus_metrics_policy"
   policy = <<EOT
-path "/sys/metrics" {
+path "sys/metrics" {
   capabilities = ["read"]
 }
 EOT
@@ -18,7 +18,7 @@ resource "vault_auth_backend" "kubernetes" {
 #Configuring Kube auth
 resource "vault_kubernetes_auth_backend_config" "example" {
   backend                = vault_auth_backend.kubernetes.path
-  kubernetes_host        = "http://kubernetes.default.svc.cluster.local:443"
+  kubernetes_host        = "https://kubernetes.default.svc.cluster.local:443"
   disable_iss_validation = "true"
 }
 
@@ -29,6 +29,6 @@ resource "vault_kubernetes_auth_backend_role" "example" {
   bound_service_account_names      = ["prometheus"]
   bound_service_account_namespaces = ["*"]
   token_ttl                        = 3600
-  token_policies                   = ["prometheus_metrics_policy"]
+  token_policies                   = [vault_policy.prometheus_metrics_policy.name]
 }
 
