@@ -1,5 +1,5 @@
 #To access the metrics endpoint the Kube auth will be utilized
-
+#THIS IS CURRENTLY NOT USED!!!
 #Creating a policy to read metrics endpoint
 resource "vault_policy" "prometheus_metrics_policy" {
   name   = "prometheus_metrics_policy"
