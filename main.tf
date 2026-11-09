@@ -73,7 +73,7 @@ resource "vault_aws_secret_backend_role" "role_assume" {
 resource "kubernetes_secret" "vault_root_creds" {
   metadata {
     name      = "vault-root-creds"
-    namespace = "vault"
+    namespace = local.k8s_namespace
   }
 
   data = {
