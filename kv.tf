@@ -13,3 +13,15 @@ resource "vault_kv_secret_v2" "sample" {
     foo = "bar"
   })
 }
+
+
+# Policy allowing access to KV sample secret for the demo_sa_role role
+resource "vault_policy" "kv_secrets" {
+  name = "kv-secrets"
+
+  policy = <<EOT
+path "${vault_mount.kv.path}/data/${vault_kv_secret_v2.sample.name}" {
+  capabilities = ["update","create","read"]
+}
+EOT
+}

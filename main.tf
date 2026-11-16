@@ -93,7 +93,7 @@ resource "vault_aws_auth_backend_role" "demo_sa_role" {
   bound_iam_principal_arns = [var.ALLOWED_ARN_ROLE_LOGIN] # Example: arn:aws:iam::123361688033:role/consume-pod-role-bright-halibut
   token_ttl                = 170
   token_max_ttl            = 300
-  token_policies           = [vault_policy.aws_secrets.name]
+  token_policies           = [vault_policy.aws_secrets.name,vault_policy.kv_secrets.name]
 }
 
 # Policy allowing access to AWS secrets engine for the demo_sa_role role
